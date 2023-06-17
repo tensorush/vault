@@ -2,7 +2,7 @@
 
 [![CI][ci-shield]][ci-url]
 
-### [Password Vault](https://t.me/SecurePasswordVaultBot) is a [Telegram](https://github.com/telegramdesktop) bot for secure password storage deployed on [Vercel](https://github.com/vercel).
+### [Password Vault](https://t.me/SecurePasswordVaultBot) is a [Telegram](https://github.com/telegramdesktop) bot for secure password storage.
 
 ### :sparkles: Features
 
