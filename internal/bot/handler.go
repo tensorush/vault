@@ -234,8 +234,6 @@ func (b *Bot) handleCallbackQuery(query *tg.CallbackQuery) {
 		return
 	}
 
-	defer b.logger.Sync()
-
 	text := split[0]
 
 	switch text {
@@ -276,6 +274,9 @@ func (b *Bot) handleCallbackQuery(query *tg.CallbackQuery) {
 		if _, err := b.Send(msg); err != nil {
 			b.logger.Warn(fmt.Sprintf("send error: %v", err.Error()))
 		}
+	}
 
+	if err := b.logger.Sync(); err != nil {
+		log.Println("logger sync error: ", err)
 	}
 }

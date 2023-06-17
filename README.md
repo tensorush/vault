@@ -13,5 +13,5 @@
 
 <!-- MARKDOWN LINKS -->
 
-[ci-shield]: https://img.shields.io/github/actions/workflow/status/tensorush/vault-bot/ci.yml?branch=main&style=for-the-badge&logo=github&label=CI&labelColor=black
-[ci-url]: https://github.com/tensorush/vault-bot/blob/main/.github/workflows/ci.yml
+[ci-shield]: https://img.shields.io/github/actions/workflow/status/tensorush/password-vault/ci.yml?branch=main&style=for-the-badge&logo=github&label=CI&labelColor=black
+[ci-url]: https://github.com/tensorush/password-vault/blob/main/.github/workflows/ci.yml
