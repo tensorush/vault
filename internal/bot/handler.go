@@ -6,8 +6,7 @@ import (
 	"log"
 	"strings"
 	"time"
-
-	"vault-bot/internal/database"
+	"vault/internal/db"
 
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -143,7 +142,7 @@ func (b *Bot) handleGet(msg *tg.Message) {
 
 	cred, err := b.vault.Get(msg.Chat.ID, service)
 	if err != nil {
-		if errors.Is(err, database.ErrServiceNotFound) {
+		if errors.Is(err, db.ErrServiceNotFound) {
 			msgConfig.Text = b.handleMessageLang(serviceNotFoundErr, msg.Chat.ID)
 		} else {
 			msgConfig.Text = b.handleMessageLang(getErr, msg.Chat.ID)
@@ -201,7 +200,7 @@ func (b *Bot) handleDel(msg *tg.Message) {
 
 	err := b.vault.Delete(msg.Chat.ID, service)
 	if err != nil {
-		if errors.Is(err, database.ErrServiceNotFound) {
+		if errors.Is(err, db.ErrServiceNotFound) {
 			msgConfig.Text = b.handleMessageLang(serviceNotFoundErr, msg.Chat.ID)
 		} else {
 			msgConfig.Text = b.handleMessageLang(delErr, msg.Chat.ID)

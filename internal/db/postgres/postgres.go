@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"vault-bot/internal/database/sqldb"
+	"vault/internal/db/sqldb"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -15,7 +15,7 @@ import (
 
 // Postgres is a struct with *sql.DB instance.
 type Postgres struct {
-	sqldb.SQLStorage
+	sqldb.SQLStore
 }
 
 // New Postgres struct constructor.
@@ -35,5 +35,5 @@ func New(db *sql.DB, path string) (*Postgres, error) {
 		return nil, fmt.Errorf("can't migrate up: %w", err)
 	}
 
-	return &Postgres{SQLStorage: sqldb.SQLStorage{DB: db}}, nil
+	return &Postgres{SQLStore: sqldb.SQLStore{DB: db}}, nil
 }

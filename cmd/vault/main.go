@@ -8,20 +8,20 @@ import (
 
 	"go.uber.org/zap"
 
-	"vault-bot/config"
-	"vault-bot/internal/bot"
-	"vault-bot/internal/database"
-	"vault-bot/internal/database/queries"
-	"vault-bot/internal/vault"
+	"vault/configs"
+	"vault/internal/bot"
+	"vault/internal/db"
+	"vault/internal/db/queries"
+	"vault/internal/vault"
 )
 
 func main() {
-	cfg, err := config.LoadConfig()
+	config, err := configs.LoadConfig("./configs/")
 	if err != nil {
 		log.Fatalf("config error: %s", err)
 	}
 
-	db, err := database.New(cfg.Type, cfg.Data)
+	db, err := db.New(config.PostgresDSN)
 	if err != nil {
 		log.Fatalf("db error: %s", err)
 	}
@@ -31,12 +31,12 @@ func main() {
 		log.Fatalf("zap error: %s", err)
 	}
 
-	vault, err := vault.New(db, cfg.EncryptionKey, logger)
+	vault, err := vault.New(db, config.BotEncryptionKey, logger)
 	if err != nil {
 		log.Fatalf("vault error: %s", err)
 	}
 
-	bot, err := bot.New(cfg.Token, cfg.ExpirationPeriod, vault, logger)
+	bot, err := bot.New(config.BotToken, config.BotVisibilityPeriod, vault, logger)
 	if err != nil {
 		log.Fatalf("bot error: %s", err)
 	}

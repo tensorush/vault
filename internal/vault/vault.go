@@ -14,21 +14,21 @@ import (
 
 	"go.uber.org/zap"
 
-	"vault-bot/internal/database"
-	"vault-bot/internal/secret"
+	"vault/internal/db"
+	"vault/internal/item"
 )
 
 const defaultLanguage = "en"
 
 // Vault is the main struct for the application logic.
 type Vault struct {
-	db     *database.DB
+	db     *db.DB
 	cipher cipher.Block
 	logger *zap.Logger
 }
 
 // New creates a new Vault.
-func New(db *database.DB, key string, logger *zap.Logger) (*Vault, error) {
+func New(db *db.DB, key string, logger *zap.Logger) (*Vault, error) {
 	cipher, err := aes.NewCipher([]byte(key))
 	if err != nil {
 		return nil, err
@@ -42,32 +42,32 @@ func New(db *database.DB, key string, logger *zap.Logger) (*Vault, error) {
 }
 
 // Get returns the secret from the database.
-func (v *Vault) Get(chatID int64, service string) (secret.Credentials, error) {
+func (v *Vault) Get(chatID int64, service string) (item.Credentials, error) {
 	service, err := v.Hash(service)
 	if err != nil {
 		err = fmt.Errorf("vault.Hash: %w", err)
 		v.logger.Warn(err.Error())
-		return secret.Credentials{}, err
+		return item.Credentials{}, err
 	}
 
 	cred, err := v.db.Get(chatID, service)
 	if err != nil {
 		err = fmt.Errorf("vault.Get: %w", err)
 		v.logger.Warn(err.Error())
-		return secret.Credentials{}, err
+		return item.Credentials{}, err
 	}
 	cred.Login, err = v.Decrypt(cred.Login)
 	if err != nil {
 		err = fmt.Errorf("vault.Decrypt: %w", err)
 		v.logger.Warn(err.Error())
-		return secret.Credentials{}, err
+		return item.Credentials{}, err
 	}
 
 	cred.Password, err = v.Decrypt(cred.Password)
 	if err != nil {
 		err = fmt.Errorf("vault.Decrypt: %w", err)
 		v.logger.Warn(err.Error())
-		return secret.Credentials{}, err
+		return item.Credentials{}, err
 	}
 
 	return cred, nil
@@ -96,7 +96,7 @@ func (v *Vault) Save(chatID int64, service, login, password string) (err error) 
 		return err
 	}
 
-	if err := v.db.Save(chatID, service, secret.Credentials{Login: login, Password: password}); err != nil {
+	if err := v.db.Save(chatID, service, item.Credentials{Login: login, Password: password}); err != nil {
 		err = fmt.Errorf("vault.Save: %w", err)
 		v.logger.Warn(err.Error())
 		return err

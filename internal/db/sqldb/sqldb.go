@@ -3,17 +3,17 @@ package sqldb
 import (
 	"database/sql"
 
-	"vault-bot/internal/database/queries"
-	"vault-bot/internal/secret"
+	"vault/internal/db/queries"
+	"vault/internal/item"
 )
 
 // DB is sql-like database.
-type SQLStorage struct {
+type SQLStore struct {
 	*sql.DB
 }
 
 // Save saves service to chat.
-func (db SQLStorage) Save(chatID int64, service string, cred secret.Credentials) error {
+func (db SQLStore) Save(chatID int64, service string, cred item.Credentials) error {
 	prep, err := queries.GetPreparedStatement(queries.AddService)
 	if err != nil {
 		return err
@@ -23,19 +23,19 @@ func (db SQLStorage) Save(chatID int64, service string, cred secret.Credentials)
 }
 
 // Get gets service from chat.
-func (db SQLStorage) Get(chatID int64, service string) (secret.Credentials, error) {
+func (db SQLStore) Get(chatID int64, service string) (item.Credentials, error) {
 	prep, err := queries.GetPreparedStatement(queries.GetService)
 	if err != nil {
-		return secret.Credentials{}, err
+		return item.Credentials{}, err
 	}
 
-	var cred secret.Credentials
+	var cred item.Credentials
 	err = prep.QueryRow(service, chatID).Scan(&cred.Login, &cred.Password)
 	return cred, err
 }
 
 // Delete deletes service from chat.
-func (db SQLStorage) Delete(chatID int64, serviceName string) error {
+func (db SQLStore) Delete(chatID int64, serviceName string) error {
 	prep, err := queries.GetPreparedStatement(queries.DeleteService)
 	if err != nil {
 		return err
@@ -56,7 +56,7 @@ func (db SQLStorage) Delete(chatID int64, serviceName string) error {
 }
 
 // GetLang gets language for chat.
-func (db SQLStorage) GetLang(chatID int64) (string, error) {
+func (db SQLStore) GetLang(chatID int64) (string, error) {
 	prep, err := queries.GetPreparedStatement(queries.GetLang)
 	if err != nil {
 		return "", err
@@ -68,7 +68,7 @@ func (db SQLStorage) GetLang(chatID int64) (string, error) {
 }
 
 // SetLang sets language for chat.
-func (db SQLStorage) SetLang(chatID int64, lang string) error {
+func (db SQLStore) SetLang(chatID int64, lang string) error {
 	prep, err := queries.GetPreparedStatement(queries.AddOrUpdateChatLang)
 	if err != nil {
 		return err

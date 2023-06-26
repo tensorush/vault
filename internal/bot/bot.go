@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"vault-bot/internal/vault"
+	"vault/internal/vault"
 
 	"go.uber.org/zap"
 
@@ -33,7 +33,7 @@ type keyboards struct {
 }
 
 // New creates a new bot.
-func New(token string, deletionInterval time.Duration, vault *vault.Vault, logger *zap.Logger) (*Bot, error) {
+func New(token string, visibilityPeriod time.Duration, vault *vault.Vault, logger *zap.Logger) (*Bot, error) {
 	bot, err := tg.NewBotAPI(token)
 	if err != nil {
 		return nil, fmt.Errorf("error creating bot: %w", err)

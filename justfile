@@ -1,12 +1,12 @@
-run:
-    go mod verify
-    go run ./cmd/vault-bot/main.go
+up *SERVICES:
+    docker compose --env-file ./configs/config.env up --build -d {{ SERVICES }}
+    docker compose --env-file ./configs/config.env logs
 
-test:
-	go test -race -vet=off ./internal/database/sqlite ./internal/vault
+migrate ADDRESS="postgresql://root:secret@0.0.0.0:5432/vault?sslmode=disable" DIRECTION="up":
+    migrate -path ./internal/db/migrations/ -database "{{ ADDRESS }}" -verbose {{ DIRECTION }}
 
-docker:
-    docker-compose up --build
+migration NAME:
+    migrate create -ext sql -dir ./internal/db/migrations/ -seq {{ NAME }}
 
-docker-test:
-	go test -race -vet=off ./...
+down:
+    docker compose --env-file ./configs/config.env down
