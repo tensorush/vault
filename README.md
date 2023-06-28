@@ -1,9 +1,9 @@
-## :hamster: :closed_lock_with_key: vault
+## :hamster: :closed_lock_with_key: **vault**
 
 [![CI][ci-shield]][ci-url]
 [![License][license-shield]][license-url]
 
-### Vault is a Telegram bot for secure password storage.
+### Telegram bot for secure password storage.
 
 ### :sparkles: Features
 
